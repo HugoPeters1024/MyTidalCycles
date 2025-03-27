@@ -1,0 +1,40 @@
+-- Jam 4!
+-- Today we're going to speed it up with some drum n bass!
+
+-- first a kick drum on 1 and 11
+d1 $ struct "1000 0000 0010 0000" $ sound "kick:4" # hpf 100
+
+-- then a snare on 5 and 11
+d2 $ struct "0000 1000 0000 1000" $ sound "noisia:10"
+
+-- finally a hi hat on the eights
+-- to get some swing we need the last third
+-- to have 16s, but ghosting a bit
+d3 $ off (1/16) (|* gain "0 0 0.8") $ struct "1010 1010 1010 1010" $ sound "hc"
+
+-- but before we continue, let's fix the bpm!
+
+setcps (120/60/4)
+
+-- noowww we're talking
+
+d4
+   $ chunk 4 (hurry 2)
+   $ struct "tttttttt" $ sound "noisia:1" # cut 1
+   # lpf (segment 8 (range 300 1400 (slow 3.3 cosine)))
+   |+ lpf (segment 8 (range 0 800 (fast 2 sine)))
+   # lpq (segment 8 (range 0.1 0.3 (slow 2.4 sine)))
+
+d5 $ slow 4
+   $ off (1/32) (|+ note 5)
+   $ off (1/16) (|- note 5)
+   $ n (scale "major" "{0 7 [5 3] ~ 10}%4")
+   # sound "rash"
+   |+ n "36"
+   # room 1
+   # gain 0.8
+
+
+all (# djf 0.9)
+solo 5
+

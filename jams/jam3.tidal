@@ -1,0 +1,43 @@
+-- Welcome to the third jam!
+-- Let's play around with some binary
+-- patterns and at a lower bpm than last time
+
+
+-- 90 bpm
+setcps (90/60/4)
+
+-- fit is absolutely magical (but simple!)
+d1 $ every 4 ghost
+   $ sew "t f f f"
+      (sound "hc*16")
+      (fast 2 $ n (fit 2 (map fromIntegral [0..12]) "0 [9 [~ 8]] 10 2") # sound "Rhythm-Ace")
+
+d2 $ juxBy 0.5 rev
+   $ off (1/8) (\p -> p |- n 5 |- note 5)
+   $ off (1/16) (\p -> p |+ n 5)
+   $ sound (stitch "t(5,8)" "rash" "arpy")
+   |+| note "0 3 5 7"
+   # gain 0.8
+   # lpf 1700
+   # lpq (segment 8 (range 0 0.3 (slow 4.2 cosine)))
+   |- note "<{5,12} {5 12} {12 7}>"
+
+-- ooohh I like that!
+d3 $ degradeBy 0.3
+   $ striate 2
+   $ slice 4 "3 1 2 4" "bsnoise"
+   # lpf (segment 16 (range 400 2400 (slow 3.3 sine)))
+   # room 0.7
+   # sz 0.8
+
+-- finally we got a fast and slower pattern
+-- that complement each other somewhat!
+
+-- I'm calling this one a win
+-- until next time :)
+
+all id
+
+
+
+

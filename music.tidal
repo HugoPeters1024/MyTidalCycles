@@ -1,5 +1,6 @@
 dstriates $ sound "cpu*4 cpu cpu [cpu cpu]" # gain 1.5
 
+
 d2 $ sound ". snare*2 . . . . ."
 
 
@@ -250,16 +251,17 @@ unsolo 4
 d5 silence
 
 setcps (130/60/8)
-setcps (174/60/4)
+setcps (130/60/4)
 
 d1 $ loopAt 2 $ sound "noisia_loop:1" # scram 1.0
 
 d1 $ loopAt 2
-   $ sound "noisia_loop:3"
-   # scram 0.1
+   $ sound "noisia_loop:2"
+   # krush 3
 
+d5 $ sound "dbs*127" # gain 1.7
 
-d5 $ stack
+xfadeIn 5 2 $ stack
    [ s "<dbs*308 dbs*246>" # amp 0.2
    , s "<dbs*738 dbs*1230>" # amp 0.2 # hpf 400
    , s "<dbs*1846 dbs*616>" # amp 0.2 # hpf 400 # nudge 0.5/8
@@ -267,8 +269,11 @@ d5 $ stack
    # lpf (segment (8/0.5) $ fast (8/0.75) $ range 200 400 sine)
    # krush 10
 
+xfadeIn 5 2 $ note "c c g g e" # sound "supertron"
 
 d2 $ fast 2 $ sound "{hc,snare:2} hc {hc,noisia:10} ho"
+
+all id
 
 d3 $ loopAt 1 $ cat
    [ s "noisia_loop:1"
@@ -336,7 +341,7 @@ d1 $ (loopAt 3.0 $ sound "noisia_loop:7" # cut 64)
 
 
 
-setcps (174/60/4)
+setcps (150/60/4)
 
 d1 $ sound "{hc,kick:2} hc {hc,snare} hc"
 d2 $ sound "<baa:4 baa:3 baa:1>/4"
@@ -583,6 +588,7 @@ d1 $ off "e" (|+ n "7") $ n "7 0 3*2 [~ 0]" |+ n "<0 5 -2 3>" # sound "supertron
    # room 0.7
    # sz (range 0.4 1 $ slow 1 perlin)
    # gain 0.7
+   # lpfbus 1 (segment 2048 $ range 10 1700 (fast 16 sine))
 
 d2 $ fast 3 $ slice 8 "<4 [4 5] 7 6 [~ 1]>" $ sound "fm:14"
 
@@ -694,7 +700,7 @@ setcps 0.4
 d1 $ n "c5 e5 g5 b4 c5 e5 g4 e4 d4" # s "superpiano" # legato 1.2
 d2 $ n "<g3 b3 d4>" # s "superpiano" # sustain 2 # gain 0.7 # cut 1
 
-setcps (150/60/4)
+setcps (130/60/4)
 
 xmas p = splice 256 p (sound "songs:0")
 
@@ -704,38 +710,41 @@ xmas p = splice 256 p (sound "songs:0")
 
 once $ slice 32 "6" $ sound "songs:0" # gain 0.8
 
-d1 $ stack
+xfade 8 $ stack
    [ "{kick:4,hc} hc {snare,hc} hc"
-   , n "3(5,8) [~ 8]*2" # sound "bshihat"
+   , n "3(5,8) [~ 8]" # sound "bshihat"
    ]
-   # krush 3
+   # leslie 1
+   # gain 0.8
 
-d2 $ note "f4 <f5 f5'sharp c5>"
+d5 $ note "f4 <f5 f5'sharp d5 d5'sharp>"
   # sound "sax"
   # room 1
-  # sz 0.7
-  # dry 0.4
-  # lpfbus 1 (segment 256 $ range 10 700 (fast (every 4 (const 5) 10) sine))
+  # sz 0.8
+  # dry 0.8
+  # lpfbus 1 (segment 256 $ range 10 800 (fast (every 4 (const 8) 16) sine))
   # lpq (range 0 0.2 saw)
   # panbus 2 (segment 256 (slow 3 sine))
   # sustain 0.9
-  # gain 1.34
+  # gain 1.28
 
-unsolo 2
+unsolo 1
+
 
 d1 $ every 4 (|+| n "1 2 3 4") $ fast 2 $ sound "{kick:3,hc} hc {snare,hc} <hc hc hc [ho ho]>" # gain 0.8
 
 unsolo 5
 
-solo 2
-unsolo 2
+solo 3
+unsolo 3
 
-d3 $ every 2 (off "e" (|+ n "1")) $ sound "dbass dbass [~ dbass] dbass" # gain 0.8
+d3 $ every 2 (off "e" (|+ n "1")) $ sound "dbass dbass [~ dbass] dbass" # gain 0.9
 
-all (# djf 0.3)
 all id
 
-d4 $ fast 2 $ note "<f5 f6 _ f7 _ _>" # sound "fm:14" # room 0.8 # sz 0.4 # gain 0.8 # djf 0.2
+d4 $ fast 2 $ note "<f5 f6 _ f7 _ _>/2" # sound "fm:14" # room 0.8 # sz 0.4 # gain 0.8 # djf 0.7
+
+d8 $ off "e" (|+ n "7") $ scramble 8 $ arpeggiate $ note (scale "harmonicMinor" "<[1 2 3 4] [5 6 7 8]>") # sound "superpiano" # room 0.8 # sz 0.3 |+ octave "5" # leslie 1 # gain 0.8
 
 unsolo 5
 
@@ -744,4 +753,644 @@ d5 $ hurry 2 $ jux rev $ hurry 0.5 $ struct "t(5,8)" $ slice 32 "<3 4 8 1 4 2 11
    # size 0.7
    # cut 1
 
-d5 $ loopAt 18 $ chop 64 $ sound "vocals:0" # lpfbus 1 (segment 256 (range 100 2000 (fast 64 sine)))
+
+d5 $ loopAt 18 $ chop 64 $ sound "vocals:0" # lpfbus 1 (segment 256 (range 100 2000 (fast 256 sine)))
+
+once $ sound "vocals:0"
+
+
+
+xfade 2 $ slow 2
+   $ every 4 (|+ note 12)
+   $ off (1/4) (\p -> p |+ note 7 |<| pF "dtune" "<0.0 0.2 0.4>")
+   $ note (scale (fromString $ "<" <> scaleList <> ">") "f4 <f4'sharp <g4 g4'sharp>>")
+   # sound "cs80lead"
+   # lpfbus 1 (segment 2048 $ range 10 700 (fast 16 sine))
+   # legato 1.0
+   # room 0.6
+   # sz 0.44
+   # dry 0.5
+   # gain 1.6
+
+d1 $ loopAt 2 $ sound "noisia_loop:2"
+
+d3 $ off (1/8) (|- note 7) $ slow 4 $ note "c c g g a a g f f e e d d c" # sound "funny:0" # end 0.2 # room 1 # sz 0.7 # lpq 0.3
+
+unsolo 1
+
+d5 $ 0.25 <~ sound "foley:5*4"
+
+all (# djf 0.2)
+all id
+
+d3 $ stack
+   [ sound "hc hc {hc,ho/4} hc"
+   , sound "kick:4 ~ snare ~"
+   ]
+
+d1 $ sound "{hc,kick:4} hc {hc,snare:3} hc"
+
+
+d1 $ sound "arpy*32" # n (range 0 7 (fast 4 perlin))
+
+d1 $ sound "kick:4!4"
+d2 $ off (1/6) (|+ n 1) $ sound "snare!3"
+
+d3 $ sound "~ <noisia:14 noisia:12>/2 ~ ~"
+
+unsolo 1
+
+once $ sound "funny:1"
+
+d1 $ slow 8 $ n (run 16) # sound "noisia"
+
+
+d1 $ sound "{kick:4,snare} kick:4 kick:4 kick:4"
+   # nudge (range (-0.03) 0.03 (fast 4 perlin))
+
+d2 $ sound "snare snare snare"
+
+d3 $ every 3 (|+ note 12) $ note "g5 c5'sharp d'min b b a" # sound "superpiano"
+
+d2 $ sound "hc*8"
+
+d3 $ sound "snare(5,8)"
+
+once $ note "c a f e" # sound "funny:1" # gain 1.5 # end 0.25
+
+once $ sound "funny:3" # gain 1.4
+
+d4 $ every 2 (# lpfbus 1 (segment 256 (range 0 1000 (fast 16 sine)))) $ off (1/8) (|+ note 7) $ note "c <e <a g> f> a" # sound "superpiano" # gain 1.2
+
+
+d1 $ loopAt 2 $ sound "noisia_loop:2"
+
+once $ sound "noisia:8"
+
+once $ sound "laser*16"
+
+d1 $ stack
+   [ n "4 4 4 4" # sound "kick"
+   , sound "snare snare snare"
+   ]
+
+
+d1 $ note "c c ~ d ~ d ~ e ~ ~ c" # "superpiano"
+
+d1 $ off (1/8) (|+ note 7) $  scramble 4 $ arpeggiate $ note "c4'maj'4" # sound "superpiano"
+
+d1 $ sound "arpy*16" # note (irand 7) # note (range 0 7 (fast 6 perlin)) # gain 1.1
+   # room 0.8
+   # sz 0.5
+   # lpq 0.4
+
+d1 $ every 2 (# sound "clap") $ sound "kick:4(8,13)"
+
+d1 $ stack
+   [ n "4 4 4 4 4" # sound "kick"
+   , sound "snare snare snare snare"
+   ]
+   # gain 1.5
+
+d1 $ slow 3 $ sound "kick:4!12"
+
+d2 $ slow 4 $ sound "snare!12"
+
+all (# gain 1.3)
+
+d1 $ sound "numbers:1 numbers:2" # gain 1.5
+   # room 1
+   # sz 0.7
+   # lpq 0.5
+   # leslie 1
+   # crush 4
+
+d1 $ loopAt 2 $ sound "noisia_loop:1" # gain 1.3
+
+d3 $ sound "dbass*4" # leslie 2
+
+d1 $ sound "kick:4*4"
+d3 $ n "3(5,8)" # sound "bshihat"
+d5 $ rarely (# sound "ho") $ sound "hc*8"
+
+d2 $ slow 2 $ iter 4 $ every 4 (|- note 7) $ slow 2 $ note "a'flat g f d" # sound "cs80lead" # octave 4 # gain 1.3
+   # lpfbus 1 (segment 2048 $ range 10 1700 (fast 32 sine))
+   # legato 0.7
+   # room 1
+   # sz 0.6
+
+d4 $ "funny:0/2" # begin rand # end (rand + 0.15) # room 1 # sz 0.93 # lpq 0.96 # krush 4 # speed (range 0.8 1.2 perlin) # gain 1.3
+
+d5 $ sound "hc*8" # gain 1.2
+
+
+d1 $ sound "{hc,kick:4} hc {hc,snare} hc" # gain 1.1
+
+d2 $ note "c'maj'3 e'maj'3 g'maj'3" # sound "superpiano"
+
+d2 $ every 3 (|+ note 7) $ note "c'maj'3 <d'maj'3 e'maj'3>" # sound "supertron"
+   # lpfbus 1 (segment 2048 $ range 10 1700 (fast 16 sine))
+   # gain 0.8
+   # legato 0.54
+   # krushbus 2 (range 0 12 (slow 2 cosine))
+
+
+
+unsolo 1
+
+d6 $ silence
+
+d1 $ note "c c g g" # sound "funny:3" # gain 1.0 # end 0.1 # room 1 # sz 0.8 # speed 0.5
+
+d1 $ note "c e g a" # sound "cs80lead"
+   # legato 0.8
+   # pF "fdecay" "<0.5 0.1>"
+   # octave "4 5 3"
+
+d2 $ sound "clap" # gain 1.4
+
+d1 $ stack
+   [ sound "hc hc hc ho"
+   , n "3(5,8)" # sound "bshihat"
+   , sound "snare snare [~ snare] snare"
+   ] # gain 1.3
+
+d4 $ loopAt 2 $ sound "noisia_loop:2" # gain 1.34
+
+
+d3 $ sound "funny:0/4" # begin 0.57 # gain 1.4 # room 1 # sz 0.315 # lpq 0.99 # speed (range 0.7 1.3 rand)
+
+d6 $ sound "~ funny:0/2" # end 0.3 # gain 1.4 # room 1 # sz 0.315 # lpq 0.99 # speed (range 0.7 1.3 rand)
+
+once $ sound "bsvocals:1" # end 0.3 # gain 1.8
+
+d8 $ sound "<laser*128 laser*256 ~ ~>" # gain 1.8
+   # lpfbus 1 (segment 2048 $ range 10 2700 (fast 4 sine))
+
+d2 $ every 4 (rev) $ slow 2 $ note "c c e [f [f]/2]" # sound "fm:14" # gain 1.0 # legato 0.6 # sz 0.7 # room 1 # lpq 0.8 # speed 0.8
+
+d1 $ sound "kick kick [kick clap*2] [~ snare]"
+
+d3 $ n "3(5,8) 2" # sound "bshihat" # gain 1.2
+d2 $ slow 4 $ note "f4 [g4 e3 g4 e3]" # sound "superpiano" # legato 0.9
+   # lpfbus 1 (segment 256 $ range 10 2700 (fast "<24 36>" sine))
+   # room 1
+   # sz 0.3
+   # lpq 0.11
+   # gain 0.9
+
+d4 $ loopAt 18 $ chop 32 $ sound "vocals:0"
+
+d5 $ sound "<numbers:1 numbers:2 numbers:3>/4" # gain 1.3 # room 1 # sz 0.98 # lpq 0.99 # dry 0.3 # cut 1
+
+d6 $ sound "foley:1/2 ~ ~ ~" # gain 1.3
+
+d7 $ rarely (# sound "laser") $ every 3 (# lpf 1000) $ n "5 5 5 [5 5]" # sound "noisia" # gain 1.1
+
+d8 $ qt $ loopAt 4.5 $ sound "noisia_atmos:1" # gain 1.8
+
+d9 $ every 2 (# lpf 500) $ (hurry 0.8) $ sound "funny" # gain 1.8
+   # lpfbus 1 (segment 256 $ range 10 2700 (fast 12 sine))
+
+unsolo 9
+
+once $ sound "laser*12" # gain 0.9
+
+d1 $ sound "kick:4*4"
+
+
+
+
+
+d2 $ slow 2 $ note "d'min'4 g'min'4 c'maj'4 c'maj'4" # sound "superpiano" # legato 2
+   # lpfbus 1 (segment 256 $ range 220 2700 (fast 16 sine))
+   # gain 0.9
+
+d3 $ striate 4 $ arpeggiate $ note "c5'maj'4" # sound "dbass"
+
+unsolo 3
+
+d2 $ fast 2 $ "3(5,8)" # sound "bshihat" # leslie 3
+
+d3 $ "4 2 4 2" # sound "kick"
+
+   # pF "sustain" 1.2
+
+   # pF "attack" 0.84
+   # pF "release" 1.20
+   # pF "sustain" 4.0
+   # pF "fsustain" 0.1
+   # pF "amp" 1.0
+   # legato 2.0
+  -- # pF "sustain" 0.5
+
+
+once $ sound "baa:4"
+
+d1 $ every 4 (# krush "0 6 0 6") $ fast 2 $ note "f2*4" # sound "gabberkick" |+ note "<0 7 12>" # legato "0.5 0.6 1 1"
+d2 $ sound "baa/8" # begin 0.3 # end 0.5 # room 1 # sz 0.97 # lpq 0.99
+d3 $ sound "kick:4*8"
+
+d4 $ sound "songs/2" # begin rand # end (rand + 0.005) # room 1 # sz 0.96 # leslie 1 # lpq 0.2
+
+d1 $ sound "supertron"
+   <| note "f5 ~ g5 ~"
+   # legato 0.3
+
+
+d2 $ every 2 (struct "t(5,8)") $ sound "cpu:2*8"
+
+d2 $ loopAt 2.5 $ sound "fm:9" # leslie 1
+
+d3 $ sound "noisia:7/4" # room 1 # sz 0.5 # gain 0.9
+   # lpfbus 1 (segment 256 $ range 0 4700 (fast 8 sine))
+   # leslie 1
+
+
+setcps (174/60/4)
+
+d1 $ sound "hc hc [~ bshihat] ho [hc bd] <cpu cpu:2> hc bshihat" # krush 1
+
+d2 $ off (1/8) (\p -> p |+ note 7 # pF "sustain" 0.9)
+   $ note "[c3'maj'3 f3'maj'4 d3'min'2 a3'min'3]/4" # sound "futureChoirPiano"
+
+d3 $ slow 2 $ note "c c ~ d f f ~ ~ d d ~ g a a ~ ~" # sound "dbass" # octave 5
+
+d3 $ loopAt 1 $ sound "fm:25"
+
+d1 $ sound "<bshihat(5,8) snare(3,5)>"
+
+d1 $ sound "<[c a [f f] e] g(5,8)>" # sound "<superpiano arpy>"
+
+d1 $ fast 4 $ note "c a f e" # sound "futureChoirPiano"
+
+d2 $ iter 3 $ sound "{bd ho [bd ho],bshihat(2,8)}" # room 0.7 # sz 0.2 # lpf 2000 # lpq 0.2 # krush 1
+
+
+
+d1 $ striate 2 $ chunk 4 (iter 4) $ splice 3 "<[1 1 4 3] [8 5 2]>/2" $ sound "fm:17" # lpfbus 1 (segment 128 (range 200 1000 (fast 4 sine))) # room 0.8 # sz 0.5
+
+d3 $ note "d5 d5 a5'sharp" # sound "bass"
+
+d1 $ every 8 rev $ off (1/8) (# speed 0.5) $ every 2 (|+ n (range 0 7 rand)) $ sound "bd bd hc [hc bshihat]" # room 0.1 # sz 0.1
+
+d1 $ weave 16 (sound "arpy" >| n (run 8))
+  [vowel "a e i",
+   vowel "i [i o] o u",
+   vowel "[e o]/3 [i o u]/2",
+   speed "1 2 3"
+  ]
+
+d1 $ weaveWith 8 (sound "bd [sn drum:2*2] bd*2 [sn drum:1]")
+  [ (# speed "0.5")
+   chop 16
+  ]
+
+d1 $ slow 8 $ loopAt 2 $ striate 8 $ chop 32 $ sound "fm:17" # room 0.7 # sz 0.3
+
+d2 $ rarely (#sound "snare") $ sound "kick kick kick kick" # n (run 4)
+
+d3 $ sound "bshihat(13,27)" # n (run 8)
+
+d4 $ every 2 (# speed 1.3) $ note "f f [g g] e" # sound "dbass" # octave (irand 2 + 3)
+
+d5 $ fast 2 $ every 2 (>| note "g3") $ note "f2 f2 g2 g2" # sound "gabberkick*4" # legato 0.3
+
+d5 silence
+
+d2 $ sound "hc*8"
+
+
+d2 $ swing 2 $ n (run 4) # sound "cpu2"
+
+d3 $ sound "{hardkick,kick:4}*4" # gain 0.9
+
+d2 $ sound "bd ho bd hc"
+
+once $ note "c c g g a a g" # sound "gabberkick" # cut 1 # octave 2
+
+d1 $ swing 4 $ sound "hc*8"
+
+d1 $ every 2 ("<0.25 0.125 0.5>" <~) $ sound "bd*2 [[~ lt] sn:3] lt:1 [ht mt*2]"
+  # room (slow 4 $ range 0 0.2 saw)
+  # sz 0.5
+  # orbit 1
+
+d1 $ stack
+   [ struct "t(5,8,<0 1 2>)" $ sound "bd"
+   , sound "snare kick"
+   ]
+
+d1 $ sound "fm:14(5,8,<0 2>)" # speed "1" # legato 1.3 # lpfbus 1 (segment 256 (range 200 4000 (fast 4 sine)))
+
+d2 $ striate 4 $ every 2 rev $ chunk 4 (iter 4) $ slice 8 "1 7 3 4(2,5) 3" $ sound "fm:17" # cut 1
+
+d1 $ chunk 4 (# gain 1.4) $ n "[~ 5] 8 10 11" # sound "cpu"
+
+d1 $ chunk 4 (\p -> p # room 1 # sz 0.9) $ sound "bd sn:2 [~ bd] sn:2"
+
+d1 $ slow 2 $ iter 4 $ n "1 2 3 4" # sound "numbers" # cut 1
+
+
+d1 $ stack
+   [ ghost $ sound "bd*2"
+   , n "2 7 [1 3] 8" # sound "cpu2"
+   , sound "bshihat(5,8)"
+   ]
+   # krush 1
+
+d2 $ striate 4 $ splice 4 (slow 2 "2 1 3") $ slow 2 $ sound "fm:17"
+   # hpf 1900
+   # room 0.7
+
+
+d1 $ echoWith 4 (1/9) (\p -> p |* gain 0.9) $ n "<1 2 3 4>(3,8,<0,2>)" # sound "arpy" # lpf (segment 8 (range 800 2000 (slow 3 saw)))
+
+d2 $ chunk 4 (iter 4) $ stack
+   [ sound "hc hc [~ hc] hc"
+   , sound "~ kick ~ snare"
+   , n "~ (3,8)" # sound "bshihat"
+   ]
+
+d2 $ every 4 rev $ stack
+   [ n "3(5,8)" # sound "bshihat"
+   , n (run 4) # sound "hc" # gain 0.8
+   , sound "kick:4*4"
+   , sound "~ ~ ~ ho/2"
+   ] # leslie 1 # hpf 400
+
+d1 $ whenmod 4 1 (|+| n 5)
+   $ off 0.125 (|+ n 12)
+   $ off 0.25 (|+ n 7)
+   $ n "[d1(3,8) f1(3,8) e1(3,8,2) a1(3,8,2)]/2"
+   # sound (choose ["rash"])
+   # lpf (range 200 8000 $ slow 2 sine)
+   # resonance (range 0.03 0.6 $ slow 2.3 sine)
+
+d1 $ n "[d1(3,8) f1(3,8) e1(3,8,2) a1(3,8,2)]/2" # "rash"
+
+once $ "clap"
+
+d1 $ jux (chunk 4 (iter 4)) $ every 2 rev $ off (1/8) (# vowel "<a b f>") $ n "4 4 [5 5] 6" # sound "cpu2" # krush 1
+d2 $ ghost $ n "3(5,8,<0,2>)" # sound "bshihat"
+
+d3 $ slow 2 $ off (1/8) (|+ n 7) $ note "c a f e" # sound "funny:3" # begin 0.1 # end 0.24 # lpf 800
+
+d1 $ jux rev $ slow 2 $ off (1/16) (|+n 5) $ n (run 8) # sound "rash" |+ n "d1"
+   # lpf (range 200 8000 $ slow 2 sine)
+   # resonance (range 0.03 0.6 $ slow 2.3 sine)
+
+d1 $ jux (# nudge 0.135)
+   $ off (1/16) (|* gain 0.88)
+   $ off (1/8) (|+ n "<7 12>")
+   $ arpeggiate $ n "<f2'min'4 g2'min'4 c3'min'4>"
+   # sound "rash"
+   # lpf (range 400 1000 (slow 3.2 saw))
+   # lpq (range 0.03 0.2 (slow 2.5 sine))
+
+
+d2 $ sew "<t f>(<3 5 8>,14,<0 2>/2)" (sound "snare [bd ho] snare*2 bd") (sound "ho*8") # gain 0.9
+
+d3 $ ghost $ sew "t(<5 3>,8, <0 0 2 2>)" (sound "funny:0*170") (sound "bd*240")
+
+d1 $ n (run 1) # sound "noisia_1_oneshot_leads/4" # room 1 # sz 0.8 # lpq 0.3
+
+d3 $ slow 2 $ n (run 8) # sound "bass" # lpfbus 1 (segment 256 (range 400 3000 (fast 32 sine))) # vowel "f"
+
+d2 $ n (run 4) # sound "noisia_2_oneshot_drums_claps" # cut 1 # lpf 1000
+
+d3 $ hurry 0.4 $ slice 8 "0 1 2 3 4" $ sound "fm:17" # room 0.3 # sz 0.3 # lpfbus 1 (segment 256 (range 200 5000 (fast 8 sine))) # gain 0.7
+
+d4 $ slow 2 $ chunk 4 (iter 4) $ (|+ note "<0 1 2 3 4>") $ echo 4 "{-0.2,0.2}" 0.9 $ note "a3 b4 c4" # sound "arpy" # lpf 1000 # lpq (range 0 0.2 (slow 3 cosine))
+
+d1 $ jux (# nudge 0.07) $ echo 4 "{-0.2,0.2}" 0.9 $ n "<0 1>(2,5,<2 0>)" # sound "clap" # speed "{1.0,1.5}" # lpf 1400 # gain 0.85
+
+d2 $ every 4 (off (1/8) (|+ n 12))
+   $ off (1/4) (|+ n 5) $ sometimes (# sound "arpy") $ slow 2 $ n "d2(3,8) g2'min'2 <a2 g2'min'2> f2" # sound "rash" # gain 0.98 # room 0.5 # sz 0.4
+   # lpf (range 400 1500 (slow 3 sine))
+   # lpq (range 0.03 0.15 (slow 2.3 cosine))
+
+d3 $ rarely (# sound "snare") $ sew "t(<3,5>,8)" (sound "kick:4*4") (sound "hc*8")
+
+d1 $ struct "t(5,8)" $ n (run 4) # sound "bshihat" # gain 1.2 # cut 1
+
+d1 $ slow 2 $ n "c c g g a a g" # sound "rash"
+   |+ n 24
+
+once $ note "c c g g a a g" # sound "funny:0" # end 0.20
+
+d1 $ note "d4(3,8) f4(5,8,<0 2>)" # sound "funny:3" # end 0.2 # cut 1 # room 0.7 # sz 0.3
+
+once $ sound "baa:4" # speed 0.7
+
+d1 $ note "a1" # sound "upliftingPad" # gain 1.2
+
+d1 $ slow 2 $ jux rev $ splice 8 (every 3 (|+ 3) "1 2 3 4") $ sound "fm:17" # lpfbus 1 (segment 256 (range 200 1500 (fast 24 sine))) # lpq 0.38 # gain 0.80
+
+d2 $ slow 2 $ stack [ sound "kick:4*4", sound "hc:8(5,8,<1 2>) hc:1(3,8)"]
+
+d3 $ every 4 (|+ n (irand 7)) $ echo 3 0.10 0.9 $ n (run 8) # sound "rash" |+ n 50
+
+setcps (130/60/4)
+
+all id
+
+d1 $ stack
+   [ sound "hc hc hc hc"
+   , sound "kick:4 ~ snare ~"
+   ]
+
+d2 $ slow 4 $ n (segment 1 (irand 7)) # sound "baa"
+
+d2 $ loopAt 2 $ sound "noisia_loop:2"
+
+d3 $ rarely (# sound "laser") $ n (segment 8 (range 0 10 (fast 2 perlin))) # sound "arpy"
+
+d4 $ slice 8 (segment 2 (irand 7)) $ sound "bsvocals:1" # room 0.7 # sz 0.8
+
+d3 $ slow 2 $ off (1/8) (|+ note 5) $ note "c a f e" # sound "laser"
+
+all id
+
+unsolo 4
+
+d1 silence >> d2 silence >> d3 silence >> d4 silence >> once (sound "backspin") >> (d1 $ "hc ho hc ho" # cut 1)
+
+d1 $ slow 4 $ n (run 13) # sound "backspin"
+
+d1 $ n (run 8) # sound "arpy" # room 1 # sz 0.98 # lpq 0.99
+
+d1 $ n (run 8) # sew "t(3,8,<2 0>)" (sound "dbass*8") (sound "snare*8") # hpf 500
+
+d2 $ sound "sax" # lpfbus 1 (segment 256 (range 100 1200 (fast 32 perlin))) # gain 1.1
+
+d1 $ slow 3 $ note "c c g g a a g ~ ~ f f e e d d c ~ ~" # sound "funny:1" # end 0.3 # lpf 800 # lpq 0.4 # room 0.7
+
+d1 $ sound "kick:4 clap kick:4 clap" # lpf 1000 # speed "{1.0,1.5}"
+
+d2 $ sound "{hardkick,kick:4}*4"
+
+
+d1 $ ghost $ slow 2 $ jux rev $ note "f3 a4(3,8) [f4 g4]" # sound "dubstepStab" # pF "decay" 1.99 # room 1 # lpf 2000 # lpq (range 0 0.4 (slow 3 sine))
+
+d2 $ slow 2 $ chunk 4 (iter 4) $ chunk 4 (hurry 2) $ stack
+   [ sound "ho hc [~ hc] hc"
+   , sound "snare ~ clap ~"
+   , sound "kick ~ kick:4 ~"
+   , sew "t f" (sound "clap*8") (sound "ho*4")
+   , fast 2 $ sound "bshihat(5,8,<0 2>)"
+   ] # speed "{1.0,<1.5 2.0>}"
+
+d3 $ every 6 (|+ n 5) $ arpeggiate $ n "<[c1'min d2'maj f1'min ~] ~>" # sound "rash" |- n 12
+
+d1 $ splice 24 (segment 1 (irand 24)) $ chop 24 $ sound "vocals" # room 0.7 # sz 0.7
+   # lpfbus 1 (segment 128 $ range 10 1700 (fast 2 sine))
+   # gain 0.9
+
+d1 $ striate 2 $ splice 16 "<6 5 4 3 2 1" $ sound "fm:17" # room 1
+
+all id
+
+d4 $ slow 2 $ echo 4 "{-0.2,0.2}" 0.9 $ note "a1 c1" # sound "laser"
+   # pan (sine)
+
+hush >> once (sound "funny:0")
+
+d1 $ stack
+   [ sound "kick:4 [~ noisia:10] kick:4 noisia:10*2"
+   , sound "hc*8"
+   ]
+   # krush 1
+
+d2 $ jux (# nudge 0.07) $ slow 2 $ note "~ ~ g5*<1 2> a5" # sound "noisia:0" # room 0.6 # krush 1 # sz 0.8 # lpf 1500 # speed 2 # gain 0.9
+
+d3 $ n "d3(3,8) f2(<3 5>,8, <0 2>)" # sound "rash"
+
+d3 $ slow 2 $ off (1/16) (|+ n 12)
+   $ off (1/8) (|+ n 5)
+   $ n "[d1(3,8) f1(3,8) e1(3,8,2) a2(3,8,2)]/2" # sound "arpy"
+   # lpf 400
+   # lpq 0.3
+
+d4 $ slow 2 $ striate 2 $ splice 16 "2 1 5 7" $ sound "bsvocals:1" # leslie 1 # gain 0.5
+
+d1 $ striate 2 $ jux rev $ note "[a c3/2] [a g] [~ c] <c d>" # sound "fm:14" # legato 0.5
+
+d1 (loopAt 1 "breaks125")
+
+
+d1 $ note "d4 <f4 a5>(3,8)" # sound "funny:1" # begin 0.3 # end 0.6 # lpf 900 # lpq (range 0.0 0.5 (slow 3 sine)) # room 0.7
+
+d1 $ slice 8 (segment 1 (irand 8)) $ sound "funny:2" # lpf 1500 # lpq 0.3 # room 1 # sz 0.90
+
+d1 $ splice 8 "1 2 3 4" $ sound "funny:0"
+
+d1 $ fast 2 $ sew "t(5,8, <0 2>)" (sound "kick:4 noisia:10 kick:4 [~ noisia:10]" # krush 1) (n (run 8) # sound "cpu2")
+d2 $ every 2 (struct "t(5,8)") $ sound "hc*8" # krush 1
+
+d3 $ fast 2 $ off (1/4) (|+ note 12) $ off (1/2) (|+ note 5) $ note "<b5'min'2 <f5'min'2 c5'maj'2> d5'maj'2 a5'maj'<2 3>>/2" # sound "superpiano"
+   # lpf 1700
+   # lpfbus 1 (segment 256 $ range 10 1700 (fast 4 saw))
+   # legato 1.5
+   # gain 1.2
+   # lpq (range 0 0.3 (slow 2.3 sine))
+
+d4 $ slow 2 $ note "f3 [~ f4] [<f3 ~> f3] f4*<1 2>" # sound "noisia:0" # cut 1 # leslie 1
+
+hush >> once (n (run 8) # sound "backspin") >> d1 (n "10 10 [~ 10] 10" # sound "noisia:10") >> d2 (n "d3(3,8) f2(5,8,<0 2>)" # sound "rash")
+
+hush >> once (sound "sax") >> hush
+
+d1 $ struct "t(13,28) t(17,23)"
+   $ sound "super808 arpy"
+   # rate (segment 16 (range 0 0.7 (fast 2 sine)))
+   # voice (segment 16 (range 0.3 1.0 (slow 2.3 cosine)))
+
+d1 $ n "60*10" # sound "superstatic"
+
+d1 $ n "[d1(3,8) f1(3,8) e1(3,8,2) a1(3,8,2)]/2" # sound "rash"
+
+d1 $ sound "super808*4"
+
+d2 $ off (1/16) (|+ n 7) $ n "[d1(5,8) f1(5,8) g1(5,8) d1(5,8)]/2" # sound "rash"
+   # lpf 1200
+   # lpq (segment 8 (slow 3 (range 0 0.7 sine)))
+
+d3 $ slice 8 (segment 1 (irand 7)) $ sound "fm:17" # room 0.7 # sz 0.3 # gain 0.7
+
+d4 $ arpeggiate $ note "c4'maj" # sound "funny:3" # gain 1.3 # cut 1
+
+
+d5 $ arpeggiate $ note "c'maj'3 a'min'3 f'maj'4" # sound "superpiano"
+
+d1 $ every 4 (fast 4) $ sound "super808*4"
+
+d2 $ chunk 4 (iter 4) $ sound "4 7 [8 9] 1" # sound "cpu2" # gain 1.2
+
+d3 $ off (1/16) (|+ n 5)
+   $ n (segment 8 (range 0 7 (fast 4 perlin))) # sound "arpy"
+
+
+d3 $ every 2 (arpeggiate)
+   $ note "{c5'maj g5'maj e5'min a5'maj}/2"
+   # sound "superpiano" # gain 1.1
+   # room 1
+   # lpf 1200
+   # lpq (segment 32 (range 0.0 0.3 (slow 3.4 sine)))
+
+d4 $ off (1/8) (\p -> p |+ n 5 # gain 0.8)
+   $ n "d1(5,8) <f0 f1>(5,8,<0 2>)" # sound "rash"
+
+d2 $ loopAt 2 $ sound "noisia_loop:2"
+
+setcps (178/60/4)
+
+d3 $ n "0 0 0 0*<1 1 1 2>" # sound "super808" # distort 1
+
+d4 $ sound "super808*4" # lpf 200
+
+d1 $ sound "snare*4" # legato 0.1
+
+d2 $ sound "~ ho ~ ho"
+
+d5 $ sound "hc*8"
+
+d6 $ 0.125 <~ (slow 2
+   $ chunk 4 (hurry 2)
+   $ note "1 2 [3 4] 5"
+   # sound "cs80lead" # legato 0.1 # room 0.78 |+ note 24 # gain 0.8
+   # pF "dtune" (segment 8 (range 0 0.3 (slow 3 cosine)))
+   # speed "1"
+   |+ n (irand 7))
+
+d7 $ sound "funny:3/8" # gain 1.5 # cut 1 # room 1 # sz 0.95
+d7 silence
+
+d1 $ qt $ loopAt 2 $ sound "noisia_loop:1"
+
+d8 $ 0.25 <~ sound "kick:4*2"
+d7 $ sound "snare:2"
+
+d3 $ n "{5,2} 5 {5,11} 5" # sound "Rhythm-Ace"
+
+d2 $ note "c4'maj" # sound "supermandolin" # gain 1.4
+
+d1 $ chunk 4 (iter 4) $ voice "0 0.8 [0 0.3] 0.6" # sound "super808"
+
+d2 $ note "<c2 f2 g2 e2>" # sound "cs80lead" |+ note "{36,37,38,39,52}" # lpfbus 1 (segment 256 (range 0 200 (fast 13 sine)))
+
+d3 $ stack [
+    note "c'min7 f'maj7 g'min7 eb'maj7" # s "superpiano",
+    note "c2 f2 g2 eb2" # s "superpiano"
+] # gain 0.8 # room 0.5 # lpf 200
+
+d3 $ note "<f3'min'2 ~ g3 a3>*2" # sound "superpiano" |+ n "{0,5,12}"
+
+d1 $ slow 8 $ n (run 32) # sound "foley"
+
+
+
+
+
+
+

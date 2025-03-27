@@ -1,0 +1,43 @@
+-- Wecome to my first jam!
+
+d1 $ sound "{super808,kick:4}*4" # gain 0.9
+
+d2 $ chunk 4 (iter 4)
+   $ sew "t f" (sound "bd(5,8)") (sound "hc*8")
+
+d3 $ every 4 (|+ n 5)
+   $ off (1/16) (|+ n 5)
+   $ n "<[d1(3,8) f1(3,8,<0 2>)] [g1(3,8) b1(3,8,<0 2>)]>" # sound "rash"
+   # lpfbus 1 (segment 256 (range 800 2200 (slow 4.3 sine)))
+   # lpq (segment 64 (range 0.03 0.23 (slow 3.3 cosine)))
+   # room 0.4
+   # speed "{1,1.5}"
+
+d4 $ sound "~ ~ [~ noisia:10*<1 1 1 2>] ~"
+
+-- I'm still learning, currently I'm mostly focussing on
+-- not letting it go out of hand and keeping it minimal :)
+
+d2 $ iter 4 (hurry 2) $ fast 2 $ n (cat ["1 4 5 [~ 7]", "4 4 8 9", "1*8"]) # sound "cpu2" # gain 1.2
+
+d5 $ striate 2 $ slice 8 (segment 1 (irand 8)) $ sound "fm:17/2" # room 0.7 # hpf 800
+
+d1 $ stack
+   [ sound "hc*16"
+   , sound "kick:4 ~ snare ~"
+   , sound "td(5,8)"
+   ]
+
+-- clearly I don't know anything about how notes work, bear with...
+-- that's better :)
+d3 $ juxBy 0.5 (# nudge 0.1) $ every 3 (|+ n 5) $ echo 3 "{-0.15,0.2}" 0.85 $ arpeggiate $ n "<c4'maj'4 g4'maj'4>" # sound "superpiano"
+
+all (# djf 0.90)
+
+-- see you in the next jam!
+-- only upwards from here on out ;)
+
+
+
+
+
